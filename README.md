@@ -4,4 +4,6 @@
 
 [realworld](https://realworld-docs.netlify.app/)
 
+[realworld-api](https://api.realworld.io/api-docs/#/)
+
 [nuxtjs](https://nuxtjs.org/)
