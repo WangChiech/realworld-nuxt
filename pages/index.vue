@@ -71,8 +71,10 @@
                     <img :src="item.author.image"/>
                   </NuxtLink>
                   <div class="info">
-                      <a href="" class="author">Eric Simons</a>
-                      <span class="date">January 20th</span>
+                    <NuxtLink :to="`/@${item.author.username}`">
+                      {{ item.author.username }}
+                    </NuxtLink>
+                    <span class="date">{{ item.createdAt | dateParse('MMM DD, YYYY') }}</span>
                   </div>
                   <button 
                     class="btn btn-outline-primary btn-sm pull-xs-right"
@@ -80,11 +82,13 @@
                       <i class="ion-heart"></i> {{ item.favoritesCount }}
                   </button>
               </div>
-              <a href="" class="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
+              <NuxtLink 
+                :to="`/article/${item.slug}`"
+                class="preview-link">
+                  <h1>{{ item.title }}</h1>
+                  <p>{{ item.description }}</p>
                   <span>Read more...</span>
-              </a>
+              </NuxtLink>
           </div>
 
         </div>
@@ -168,12 +172,14 @@ export default {
         this.$redirect('/login')
         return
       }
+      item.loading = true
       const api = item.favorited 
         ? unfavoriteArticles : favoriteArticles
       await api(item.slug)
       item.favoritesCount = item.favorited 
         ? --item.favoritesCount : ++item.favoritesCount
       item.favorited = item.favorited ? false : true
+      item.loading = false
     }
   }
 }
