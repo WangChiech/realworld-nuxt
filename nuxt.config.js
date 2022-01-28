@@ -20,5 +20,13 @@ export default {
     '~/plugins/request.js',
     '~/plugins/day.js',
     '~/plugins/utils.js'
-  ]
+  ],
+  router: {
+    mode: 'hash',
+    linkActiveClass: 'active'
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 3000
+  }
 }

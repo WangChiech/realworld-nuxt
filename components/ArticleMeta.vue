@@ -11,21 +11,36 @@
     </div>
 
     <button 
+      v-if="!isSelf"
       class="btn btn-sm btn-outline-secondary"
-      @click="handleFollow(article.author)">
+      @click="handleFollow(article.author, )">
       <i class="ion-plus-round"></i>
       &nbsp;
-      Follow Eric Simons
+      Follow {{ article.author.username }}
     </button>
+    <NuxtLink 
+      v-else
+      class="btn btn-outline-secondary btn-sm" 
+      :to="{ path: `/editor/${article.slug}`}">
+      <i class="ion-edit"></i> Edit Article
+    </NuxtLink>
     &nbsp;
     <button 
+      v-if="!isSelf"
       class="btn btn-sm btn-outline-primary"
       @click="handleFavorite(article)">
       <i class="ion-heart"></i>
       &nbsp;
-      Favorite Post <span class="counter">
+      Favorite Post
+      <span class="counter">
         {{ (`${ article.avoritesCount }`) }}
       </span>
+    </button>
+    <button 
+      v-else
+      class="btn btn-outline-danger btn-sm"
+      @click="handleDeleteArticle">
+      <i class="ion-trash-a"></i> Delete Article
     </button>
   </div>
 </template>
@@ -40,6 +55,12 @@ export default {
         return {}
       }
     },
+    user: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     handleFollow: {
       type: Function,
       default: () => {}
@@ -47,6 +68,16 @@ export default {
     handleFavorite: {
       type: Function,
       default: () => {}
+    }
+  },
+  computed: {
+    isSelf() {
+      return this.article.author.username === this.user.username
+    }
+  },
+  methods: {
+    handleDeleteArticle() {
+
     }
   }
 }

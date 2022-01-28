@@ -15,16 +15,15 @@
         <div class="col-md-9">
           <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
-              <li class="nav-item" v-if="!!user">
+              <li class="nav-item" v-if="!!user.token">
                 <NuxtLink 
                   class="nav-link" 
                   :class="{ active: tab === 'followTab' }" 
+                  exact
                   :to="{
                     path: '/',
                     query: {
-                      tab: 'followTab',
-                      tag,
-                      currentPage
+                      tab: 'followTab'
                     }
                   }">
                   Your Feed
@@ -34,26 +33,23 @@
                 <NuxtLink 
                   class="nav-link" 
                   :class="{ active: tab === 'globalTab' }" 
+                  exact
                   :to="{
-                    path: '/',
-                    query: {
-                      tab: 'globalTab',
-                      tag,
-                      currentPage
-                    }
+                    path: '/'
                   }">
                   Global Feed
                 </NuxtLink>
               </li>
-              <li class="nav-item" v-if="tab === 'tag'">
+              <li class="nav-item" v-if="tag">
                 <NuxtLink 
+                  class="nav-link" 
                   :class="{ active: tab === 'tag' }" 
+                  exact
                   :to="{
                     path: '/',
                     query: {
                       tab: 'tag',
-                      tag,
-                      currentPage
+                      tag
                     }
                   }">
                   {{ `#${tag}` }}
@@ -78,6 +74,8 @@
                   </div>
                   <button 
                     class="btn btn-outline-primary btn-sm pull-xs-right"
+                    :class="{ active: item.favorited ? true : false}"
+                    :disabled="!!item.loading"
                     @click="handleFavorite(item)">
                       <i class="ion-heart"></i> {{ item.favoritesCount }}
                   </button>
@@ -85,10 +83,46 @@
               <NuxtLink 
                 :to="`/article/${item.slug}`"
                 class="preview-link">
-                  <h1>{{ item.title }}</h1>
-                  <p>{{ item.description }}</p>
-                  <span>Read more...</span>
+                <h1>{{ item.title }}</h1>
+                <p>{{ item.description }}</p>
+                <span>Read more...</span>
+                <ul class="tag-list">
+                  <li 
+                    class="tag-default tag-pill tag-outline ng-binding ng-scope"
+                    v-for="tagItem in item.tagList"
+                    :key="tagItem">
+                    {{ tagItem }}
+                  </li>
+                </ul>
               </NuxtLink>
+          </div>
+
+          <div class="ng-isolate-scope"><nav>
+            <ul class="pagination">
+
+              <li 
+                class="page-item ng-scope"
+                :class="{active: +item === +currentPage}"
+                v-for="item in totlePage"
+                :key="item">
+
+                <NuxtLink 
+                  class="page-link"
+                  :to="{
+                    path: '/',
+                    query: {
+                      tab,
+                      tag,
+                      currentPage: item
+                    }
+                  }">
+                  {{ item }}
+                </NuxtLink>
+
+              </li>
+
+            </ul>
+          </nav>
           </div>
 
         </div>
@@ -124,6 +158,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { getTags } from '@/api/tag'
 import { 
   getRencentFollowArticles, 
@@ -131,44 +166,49 @@ import {
   favoriteArticles,
   unfavoriteArticles
 } from '@/api/article.js'
+
 export default {
-  async asyncData({ store, query }) {
-    const { user } = store.state
+  async asyncData({ query }) {
+    console.log(query)
     const tab = query.tab || 'globalTab'
     const tag = query.tag || ''
     const currentPage = parseInt(query.currentPage) || 1
     const pageSize = 20
-    const articleApi = tab === 'followTab' 
-      ? getRencentFollowArticles : getRencentArticles
+    const articleApi = tab === 'followTab' ? getRencentFollowArticles : getRencentArticles
+    const params = {
+      limit: pageSize,
+      offset: (currentPage - 1) * pageSize
+    }
+    tag ? params.tag = tag : ''
     const [articleRes, tagRes] = await Promise.all([
-      articleApi({
-        limit: pageSize,
-        tag,
-        offset: (currentPage - 1) * pageSize
-      }),
+      articleApi(params),
       getTags()
     ])
     const { articles, articlesCount } = articleRes.data
+    articles.forEach(item => {
+      item.loading = false
+    })
     const { tags } = tagRes.data
     return {
       tab,
       tag,
       currentPage,
+      pageSize,
       articles,
       articlesCount,
-      tags,
-      user
+      tags
     }
   },
   watchQuery: ['tab', 'tag', 'currentPage'],
-  data() {
-    return {
-      user: this.$store.state.user
+  computed: {
+    ...mapState(['user']),
+    totlePage() {
+      return Math.ceil(this.articlesCount / this.pageSize)
     }
   },
   methods: {
     async handleFavorite(item) {
-      if (!this.user) {
+      if (!this.user.token) {
         this.$redirect('/login')
         return
       }

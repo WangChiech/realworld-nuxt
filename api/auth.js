@@ -1,4 +1,4 @@
-import { request } from '../plugins/request.js'
+import { request } from '@/plugins/request.js'
 
 export const register = (data) => {
   return request({

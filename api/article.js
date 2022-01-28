@@ -1,26 +1,26 @@
 import { request } from '../plugins/request.js'
 
-export const getRencentFollowArticles = (data) => { // 获取最近 follow 的所有文章
+export const getRencentFollowArticles = (params) => { // 获取最近 follow 的所有文章
   return request({
     method: 'get',
-    url: '/api/article/feed',
-    data
+    url: '/api/articles/feed',
+    params
   })
 }
 
-export const getRencentArticles = (data) => { // 获取最近的全部文章
+export const getRencentArticles = (params) => { // 获取最近的全部文章
   return request({
     method: 'get',
     url: '/api/articles',
-    data
+    params
   })
 }
 
-export const createArticles = (data) => { // 创建文章
+export const createArticles = (params) => { // 创建文章
   return request({
     method: 'post',
     url: '/api/articles',
-    data
+    data: params.data
   })
 }
 
@@ -31,10 +31,11 @@ export const getArticles = (slug) => { // 获取文章
   })
 }
 
-export const updateArticles = (slug) => { // 更新文章
+export const updateArticles = (params) => { // 更新文章
   return request({
     method: 'put',
-    url: `/api/articles/${slug}`
+    url: `/api/articles/${params.slug}`,
+    data: params.data
   })
 }
 

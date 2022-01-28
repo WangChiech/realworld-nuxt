@@ -1,27 +1,30 @@
-import Cookies from 'js-cookie'
 import { getUser } from '@/api/auth'
+
+const Cookie = process.client ? require('js-cookie') : undefined
+
+const cookieparser = process.server ? require('cookieparser') : undefined
 
 export const state = () => {
   return {
-    user: process.client ? window.localStorage.getItem('token') : null
+    user: {}
   }
 }
 
 export const mutations = {
   setUser(state, user) {
     state.user = user
-    Cookies.set('token', user.token)
+    process.client ? Cookie.set('user', JSON.stringify(user)) : ''
   }
 }
 
 export const actions = {
   async nuxtServerInit ({ commit }, { req }) {
-    const token = Cookies.get('token')
-    if (token) {
-      commit('setUser', { token })
-      const { data } = await getUser()
-      commit('setUser', data.user || {})
-      console.log(mm)
+    if (!req.headers.cookie) {
+      return
+    }
+    const parsed = cookieparser.parse(req.headers.cookie)
+    if (!!parsed.user) {
+      commit('setUser', JSON.parse(parsed.user))
     }
   }
 }

@@ -6,29 +6,45 @@
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
             <!-- Add "active" class when you're on that page" -->
-            <NuxtLink class="nav-link active" to="/">Home</NuxtLink>
+            <NuxtLink 
+              class="nav-link" 
+              exact 
+              :class="{ active: $route.path === '/' }" 
+              to="/">Home</NuxtLink>
           </li>
-          <li class="nav-item" v-if="!!user">
-            <NuxtLink class="nav-link" to="/editor/">
+          <li class="nav-item" v-if="!!user.token">
+            <NuxtLink 
+              class="nav-link" 
+              :class="{ active: $route.path === '/editor' }" 
+              to="/editor/">
               <i class="ion-compose"></i>&nbsp;New Article
             </NuxtLink>
           </li>
-          <li class="nav-item" v-if="!!user">
-            <NuxtLink class="nav-link" to="/settings">
+          <li class="nav-item" v-if="!!user.token">
+            <NuxtLink 
+              class="nav-link"
+              :class="{ active: $route.path === '/settings' }"  
+              to="/settings">
               <i class="ion-gear-a"></i>&nbsp;Settings
             </NuxtLink>
           </li>
-          <li class="nav-item" v-if="!user">
-            <NuxtLink class="nav-link" to="/login">
+          <li class="nav-item" v-if="!user.token">
+            <NuxtLink 
+              class="nav-link" 
+              :class="{ active: $route.path === '/login' }" 
+              to="/login">
               Sign in
             </NuxtLink>
           </li>
-          <li class="nav-item" v-if="!user">
-            <NuxtLink class="nav-link" to="/register">
+          <li class="nav-item" v-if="!user.token">
+            <NuxtLink 
+              class="nav-link" 
+              :class="{ active: $route.path === '/register' }" 
+              to="/register">
               Sign up
             </NuxtLink>
           </li>
-          <li class="nav-item" v-if="!!user">
+          <li class="nav-item" v-if="!!user.token">
             <NuxtLink class="nav-link ng-binding" to="#/@wangjie">
               <img class="user-pic" src="https://api.realworld.io/images/smiley-cyrus.jpeg">
               wangjie
@@ -51,11 +67,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  data() {
-    return {
-      user: this.$store.state.user
-    }
+  computed: {
+    ...mapState(['user'])
   }
 }
 </script>
