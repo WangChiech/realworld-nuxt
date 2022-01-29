@@ -1,5 +1,7 @@
 # realworld-nuxt
 
+代码运行结果 [查看](http://101.35.2.170:3000)
+
 基于 nuxt JS 的 realworld 项目开发
 
 [realworld](https://realworld-docs.netlify.app/)
