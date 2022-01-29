@@ -1747,6 +1747,11 @@
   dependencies:
     "sprintf-js" "~1.0.2"
 
+"argparse@^2.0.1":
+  "integrity" "sha1-JG9Q88p4oyQPbJl+ipvR6sSeSzg="
+  "resolved" "https://registry.npm.taobao.org/argparse/download/argparse-2.0.1.tgz"
+  "version" "2.0.1"
+
 "arr-diff@^4.0.0":
   "integrity" "sha1-1kYQdP6/7HHn4VI1dhoyml3HxSA="
   "resolved" "https://registry.nlark.com/arr-diff/download/arr-diff-4.0.0.tgz"
@@ -3187,6 +3192,11 @@
   "resolved" "https://registry.npmmirror.com/entities/download/entities-2.2.0.tgz"
   "version" "2.2.0"
 
+"entities@~2.1.0":
+  "integrity" "sha1-mS0xKc999ocLlsV4WMJJoSD4uLU="
+  "resolved" "https://registry.nlark.com/entities/download/entities-2.1.0.tgz"
+  "version" "2.1.0"
+
 "errno@^0.1.3", "errno@~0.1.7":
   "integrity" "sha1-i7Ppx9Rjvkl2/4iPdrSAnrwugR8="
   "resolved" "https://registry.nlark.com/errno/download/errno-0.1.8.tgz"
@@ -4545,6 +4555,13 @@
     "picocolors" "^1.0.0"
     "shell-quote" "^1.6.1"
 
+"linkify-it@^3.0.1":
+  "integrity" "sha1-qYuvRM5FpVDvtNScdp0HUkzC+i4="
+  "resolved" "https://registry.npmmirror.com/linkify-it/download/linkify-it-3.0.3.tgz?cache=0&sync_timestamp=1633117408381&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Flinkify-it%2Fdownload%2Flinkify-it-3.0.3.tgz"
+  "version" "3.0.3"
+  dependencies:
+    "uc.micro" "^1.0.1"
+
 "loader-runner@^2.4.0":
   "integrity" "sha1-7UcGa/5TTX6ExMe5mYwqdWB9k1c="
   "resolved" "https://registry.nlark.com/loader-runner/download/loader-runner-2.4.0.tgz"
@@ -4708,6 +4725,17 @@
   dependencies:
     "object-visit" "^1.0.0"
 
+"markdown-it@^12.3.2":
+  "integrity" "sha512-TchMembfxfNVpHkbtriWltGWc+m3xszaRD0CZup7GFFhzIgQqxIfn3eGj1yZpfuflzPvfkt611B2Q/Bsk1YnGg=="
+  "resolved" "https://registry.npmmirror.com/markdown-it/download/markdown-it-12.3.2.tgz"
+  "version" "12.3.2"
+  dependencies:
+    "argparse" "^2.0.1"
+    "entities" "~2.1.0"
+    "linkify-it" "^3.0.1"
+    "mdurl" "^1.0.1"
+    "uc.micro" "^1.0.5"
+
 "md5.js@^1.3.4":
   "integrity" "sha512-xitP+WxNPcTTOgnTJcrhM0xvdPepipPSf3I8EIpGKeFLjt3PlJLIDG3u8EX53ZIubkb+5U2+3rELYpEhHhzdkg=="
   "resolved" "https://registry.npmmirror.com/md5.js/download/md5.js-1.3.5.tgz"
@@ -4726,6 +4754,11 @@
   "integrity" "sha1-aZs8OKxvHXKAkaZGULZdOIUC/Vs="
   "resolved" "https://registry.npmmirror.com/mdn-data/download/mdn-data-2.0.4.tgz"
   "version" "2.0.4"
+
+"mdurl@^1.0.1":
+  "integrity" "sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4="
+  "resolved" "https://registry.nlark.com/mdurl/download/mdurl-1.0.1.tgz"
+  "version" "1.0.1"
 
 "mem@^8.1.1":
   "integrity" "sha1-zxGLNXxlq3t+CBe98AyAYil8ASI="
@@ -7452,6 +7485,11 @@
   "integrity" "sha1-ZJplaxkd/6tPIdXgU+J8oXy/9cY="
   "resolved" "https://registry.npmmirror.com/ua-parser-js/download/ua-parser-js-0.7.31.tgz"
   "version" "0.7.31"
+
+"uc.micro@^1.0.1", "uc.micro@^1.0.5":
+  "integrity" "sha1-nEEagCpAmpH8bPdAgbq6NLJEmaw="
+  "resolved" "https://registry.npm.taobao.org/uc.micro/download/uc.micro-1.0.6.tgz"
+  "version" "1.0.6"
 
 "ufo@^0.7.4":
   "integrity" "sha1-Amjjc0tBPJ7W81ECAfQjcoIbh1w="
