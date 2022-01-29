@@ -2582,6 +2582,11 @@
   "resolved" "https://registry.npmmirror.com/cookie/download/cookie-0.3.1.tgz"
   "version" "0.3.1"
 
+"cookieparser@^0.1.0":
+  "integrity" "sha512-+eHibHast+i+CEoFMQ7y9e4l/SBdWTHhWH6yidaPCYW2S/PmxRfbT1fAle/5WvbzQ6u092qX8XvfmICNtVestQ=="
+  "resolved" "https://registry.npmmirror.com/cookieparser/download/cookieparser-0.1.0.tgz"
+  "version" "0.1.0"
+
 "copy-concurrently@^1.0.0":
   "integrity" "sha1-kilzmMrjSTf8r9bsgTnBgFHwteA="
   "resolved" "https://registry.nlark.com/copy-concurrently/download/copy-concurrently-1.0.5.tgz"
