@@ -45,9 +45,11 @@
             </NuxtLink>
           </li>
           <li class="nav-item" v-if="!!user.token">
-            <NuxtLink class="nav-link ng-binding" to="#/@wangjie">
-              <img class="user-pic" src="https://api.realworld.io/images/smiley-cyrus.jpeg">
-              wangjie
+            <NuxtLink 
+              class="nav-link ng-binding" 
+              :to="`/@${user.username}`">
+              <img class="user-pic" :src="user.image">
+              {{ user.username }}
             </NuxtLink>
           </li>
         </ul>

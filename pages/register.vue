@@ -3,6 +3,7 @@
     :key="type"
     :user="user"
     :type="type"
+    :errorList="errorList"
     :onSubmit="onSubmit"/>
 </template>
 
@@ -17,14 +18,26 @@ export default {
         email: '',
         password: ''
       },
-      type: 0
+      type: 0,
+      errorList: []
     }
   },
   methods: {
-    onSubmit() {
-      register({ user: this.user }).then(res => {
-        console.log(res)
-      })
+    async onSubmit() {
+      try {
+        const { data } = await register({ user: this.user })
+        this.$store.commit('setUser', data.user || {})
+        this.$router.push('/')
+      } catch (err) {
+        const errorList = []
+        const errors = err.response.data.errors
+        for (let key in errors) {
+          errors[key].forEach(item => {
+            errorList.push(`${key} ${item}`)
+          })
+        }
+        this.errorList = [...errorList]
+      }
     }
   }
 }

@@ -1,10 +1,19 @@
 <template>
   <div class="article-meta">
-    <a href="profile.html"><img :src="article.author.image"/></a>
+    <NuxtLink 
+      :to="{
+        path: `/@${article.author.username}`
+      }">
+      <img :src="article.author.image"/>
+    </NuxtLink>
     <div class="info">
-      <a href="" class="author">
+      <NuxtLink 
+        :to="{
+          path: `/@${article.author.username}`
+        }" 
+        class="author">
         {{ article.author.username }}
-      </a>
+      </NuxtLink>
       <span class="date">
         {{ article.createdAt | dateParse('MMM DD, YYYY') }}
       </span>
@@ -13,10 +22,13 @@
     <button 
       v-if="!isSelf"
       class="btn btn-sm btn-outline-secondary"
-      @click="handleFollow(article.author, )">
+      :class="{
+        active: article.following ? true : false
+      }"
+      @click="handleFollow(article)">
       <i class="ion-plus-round"></i>
       &nbsp;
-      Follow {{ article.author.username }}
+      {{ `${article.author.following ? 'Un' : ''}Follow` }} {{ article.author.username }}
     </button>
     <NuxtLink 
       v-else
@@ -27,13 +39,16 @@
     &nbsp;
     <button 
       v-if="!isSelf"
+      :class="{
+        active: article.favorited ? true : false
+      }"
       class="btn btn-sm btn-outline-primary"
       @click="handleFavorite(article)">
       <i class="ion-heart"></i>
       &nbsp;
-      Favorite Post
+      {{ `${ article.favorited ? 'Un' : '' }Favorite Post` }}
       <span class="counter">
-        {{ (`${ article.avoritesCount }`) }}
+        {{ (`(${ article.favoritesCount })`) }}
       </span>
     </button>
     <button 
@@ -68,16 +83,15 @@ export default {
     handleFavorite: {
       type: Function,
       default: () => {}
+    },
+    handleDeleteArticle: {
+      type: Function,
+      default: () => {}
     }
   },
   computed: {
     isSelf() {
       return this.article.author.username === this.user.username
-    }
-  },
-  methods: {
-    handleDeleteArticle() {
-
     }
   }
 }

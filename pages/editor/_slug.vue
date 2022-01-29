@@ -77,10 +77,8 @@ export default {
     let article = {
       tagList: []
     }
-    console.log(params)
     if (slug) {
       const { data } = await getArticles(slug)
-      console.log('111222', data)
       article = {
         title: data.article.title,
         description: data.article.description,
@@ -104,12 +102,12 @@ export default {
         return
       }
       this.article.tagList.push(this.tag)
+      this.tag = ''
     },
     handleDeleteTag(item) {
       const tagListSet = new Set(this.article.tagList)
       tagListSet.delete(item)
       this.article.tagList = Array.from(tagListSet)
-      this.tag = ''
     },
     async handlePublishArticle() {
       const api = this.slug === undefined ? createArticles : updateArticles
@@ -124,7 +122,8 @@ export default {
           path: `/article/${slug}`
         })
       } catch(err) {
-        console.log(err)      }
+        console.log(err)      
+      }
       
     }
   }

@@ -22,7 +22,7 @@ export default {
     '~/plugins/utils.js'
   ],
   router: {
-    mode: 'hash',
+    // mode: 'hash',
     linkActiveClass: 'active'
   },
   server: {

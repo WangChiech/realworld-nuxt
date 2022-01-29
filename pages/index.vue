@@ -96,33 +96,36 @@
                 </ul>
               </NuxtLink>
           </div>
+          <p v-if="!articles.length">
+            No articles are here... yet.
+          </p>
+          <div class="ng-isolate-scope">
+            <nav>
+              <ul class="pagination">
 
-          <div class="ng-isolate-scope"><nav>
-            <ul class="pagination">
+                <li 
+                  class="page-item ng-scope"
+                  :class="{active: +item === +currentPage}"
+                  v-for="item in totlePage"
+                  :key="item">
 
-              <li 
-                class="page-item ng-scope"
-                :class="{active: +item === +currentPage}"
-                v-for="item in totlePage"
-                :key="item">
+                  <NuxtLink 
+                    class="page-link"
+                    :to="{
+                      path: '/',
+                      query: {
+                        tab,
+                        tag,
+                        currentPage: item
+                      }
+                    }">
+                    {{ item }}
+                  </NuxtLink>
 
-                <NuxtLink 
-                  class="page-link"
-                  :to="{
-                    path: '/',
-                    query: {
-                      tab,
-                      tag,
-                      currentPage: item
-                    }
-                  }">
-                  {{ item }}
-                </NuxtLink>
+                </li>
 
-              </li>
-
-            </ul>
-          </nav>
+              </ul>
+            </nav>
           </div>
 
         </div>
@@ -158,7 +161,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { getTags } from '@/api/tag'
 import { 
   getRencentFollowArticles, 
@@ -168,8 +170,8 @@ import {
 } from '@/api/article.js'
 
 export default {
-  async asyncData({ query }) {
-    console.log(query)
+  async asyncData({ query, store }) {
+    const { user } = store.state
     const tab = query.tab || 'globalTab'
     const tag = query.tag || ''
     const currentPage = parseInt(query.currentPage) || 1
@@ -196,12 +198,12 @@ export default {
       pageSize,
       articles,
       articlesCount,
-      tags
+      tags,
+      user
     }
   },
   watchQuery: ['tab', 'tag', 'currentPage'],
   computed: {
-    ...mapState(['user']),
     totlePage() {
       return Math.ceil(this.articlesCount / this.pageSize)
     }

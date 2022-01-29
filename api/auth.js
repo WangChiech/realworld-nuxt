@@ -22,3 +22,11 @@ export const getUser = () => {
     url: '/api/user'
   })
 }
+
+export const updateUser = (data) => {
+  return request({
+    method: 'put',
+    url: '/api/user',
+    data
+  })
+}

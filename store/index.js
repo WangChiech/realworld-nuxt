@@ -14,6 +14,10 @@ export const mutations = {
   setUser(state, user) {
     state.user = user
     process.client ? Cookie.set('user', JSON.stringify(user)) : ''
+  },
+  removeUser(state) {
+    state.user = {}
+    Cookie.remove('user')
   }
 }
 

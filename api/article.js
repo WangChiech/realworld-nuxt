@@ -76,7 +76,7 @@ export const followProfile = (username) => { // follow a user
 
 export const delProfile = (username) => { // unfollow a user
   return request({
-    method: 'delet',
+    method: 'delete',
     url: `/api/profiles/${username}/follow`
   })
 }
@@ -88,7 +88,7 @@ export const getComments = (slug) => { // get comments for an article
   })
 }
 
-export const CreateComment = (slug, comment) => { // create a comment for an article
+export const createComment = (slug, comment) => { // create a comment for an article
   return request({
     method: 'post',
     url: `/api/articles/${slug}/comments`,
@@ -98,7 +98,7 @@ export const CreateComment = (slug, comment) => { // create a comment for an art
 
 export const delComment = (slug, id) => { // delete a comment for an article
   return request({
-    method: 'post',
-    url: `/api/articles/${slug}/comments${id}`
+    method: 'delete',
+    url: `/api/articles/${slug}/comments/${id}`
   })
 }

@@ -13,7 +13,11 @@
           </p>
 
           <ul class="error-messages">
-            <li>That email is already taken</li>
+            <li
+              v-for="item in errorList"
+              :key="item">
+              {{ item }}
+            </li>
           </ul>
 
           <form>
@@ -22,21 +26,25 @@
                 class="form-control form-control-lg" 
                 type="text" 
                 placeholder="Your Name"
-                v-model="user.username">
+                v-model="user.username"
+                required>
             </fieldset>
             <fieldset class="form-group">
               <input 
                 class="form-control form-control-lg" 
-                type="text" 
+                type="email" 
                 placeholder="Email"
-                v-model="user.email">
+                v-model="user.email"
+                required>
             </fieldset>
             <fieldset class="form-group">
               <input 
                 class="form-control form-control-lg" 
                 type="password" 
                 placeholder="Password"
-                v-model="user.password">
+                v-model="user.password"
+                required
+                minlength="8">
             </fieldset>
             <button 
               type="button" 
@@ -64,6 +72,12 @@ export default {
       type: Object,
       default() {
         return {}
+      }
+    },
+    errorList: {
+      type: Array,
+      default() {
+        return []
       }
     },
     onSubmit: {

@@ -10,7 +10,8 @@
           :article="article"
           :user="user"
           :handleFollow="handleFollow"
-          :handleFavorite="handleFavorite"/>
+          :handleFavorite="handleFavorite"
+          :handleDeleteArticle="handleDeleteArticle"/>
 
       </div>
     </div>
@@ -35,7 +36,8 @@
           :article="article"
           :user="user"
           :handleFollow="handleFollow"
-          :handleFavorite="handleFavorite"/>
+          :handleFavorite="handleFavorite"
+          :handleDeleteArticle="handleDeleteArticle"/>
       </div>
 
       <div class="row">
@@ -44,11 +46,17 @@
 
           <form class="card comment-form" v-if="user.token">
             <div class="card-block">
-              <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+              <textarea 
+                v-model="commentContent"
+                class="form-control" 
+                placeholder="Write a comment..." 
+                rows="3">
+              </textarea>
             </div>
             <div class="card-footer">
-              <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img"/>
+              <img :src="user.image"/>
               <button 
+                type="button"
                 class="btn btn-sm btn-primary"
                 @click="handleCreateComment">
                 Post Comment
@@ -64,33 +72,34 @@
             </NuxtLink> to add comments on this article.
           </p>
         
-          <div class="card">
-            <div class="card-block">
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            </div>
+          <div 
+            v-for="comment in comments"
+            :key="comment.id"
+            class="card">
+            <div class="card-block" v-html="comment.body"></div>
             <div class="card-footer">
-              <a href="" class="comment-author">
-                <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img"/>
-              </a>
+              <NuxtLink 
+                :to="{
+                  path: `/@${comment.author.username}`
+                }"
+                class="comment-author">
+                <img :src="comment.author.image"/>
+              </NuxtLink>
               &nbsp;
-              <a href="" class="comment-author">Jacob Schmidt</a>
-              <span class="date-posted">Dec 29th</span>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-block">
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            </div>
-            <div class="card-footer">
-              <a href="" class="comment-author">
-                <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img"/>
-              </a>
-              &nbsp;
-              <a href="" class="comment-author">Jacob Schmidt</a>
-              <span class="date-posted">Dec 29th</span>
-              <span class="mod-options">
-                <i class="ion-edit"></i>
+              <NuxtLink 
+                :to="{
+                  path: `/@${comment.author.username}`
+                }"
+                class="comment-author">
+                {{ comment.author.username }}
+              </NuxtLink>
+              <span class="date-posted">
+                {{ comment.updateAt | dateParse('MMM DD, YYYY') }}
+              </span>
+              <span 
+                v-if="comment.author.username === user.username"
+                class="mod-options"
+                @click="handleDeleteComment(comment.id)">
                 <i class="ion-trash-a"></i>
               </span>
             </div>
@@ -115,48 +124,92 @@ import {
   followProfile,
   delProfile,
   getComments,
-  CreateComment,
+  createComment,
   delComment,
   delArticles
 } from '@/api/article'
 
 export default {
   async asyncData({ params }) {
-    console.log(1111, params, params.slug)
-    const { data } = await getArticles(params.slug)
-    console.log(data)
-    const article = data.article
+    const { slug } = params
+    const [articlesData, commontsData] = await Promise.all([
+      getArticles(slug),
+      getComments(slug)
+    ])
+    const { article } = articlesData.data
+    const { comments } = commontsData.data
     const md = new MarkdownIt()
     article.body = md.render(article.body)
+    comments.forEach((comment) => {
+      comment.body = md.render(comment.body)
+    })
     return {
-      article
+      slug,
+      article,
+      comments
+    }
+  },
+  data() {
+    return {
+      commentContent: ''
     }
   },
   computed: {
     ...mapState(['user'])
   },
   methods: {
-    handleFollow(article) {
-      console.log('handleFollow',article)
+    async handleFollow(article) {
       if (!this.user.token) {
         this.$router.push('/register')
       } else {
+        const api = article.author.following ? delProfile : followProfile
+        const { data } = await api(article.author.username)
+        article.author.following = data.profile.following
+      }
+    },
+    async handleFavorite(item) {
+      if (!this.user.token) {
+        this.$router.push('/register')
+      } else {
+        const api = item.favorited 
+          ? unfavoriteArticles : favoriteArticles
+        await api(item.slug)
+        item.favoritesCount = item.favorited 
+          ? --item.favoritesCount : ++item.favoritesCount
+        item.favorited = item.favorited ? false : true
+      }
+    },
+    async handleCreateComment() {
+      if (!this.user.token) {
+        this.$router.push('/register')
+      } else {
+        try {
+          const { data } = await createComment(this.slug, {
+            comment: {
+              body: this.commentContent
+            }
+          })
+          this.comments.unshift(data.comment)
+          this.commentContent = ''
+        } catch (err) {
 
+        }
       }
     },
-    handleFavorite(article) {
-      console.log('handleFavorite',article)
-      if (!this.user.token) {
-        this.$router.push('/register')
-      } else {
-        
-      }
+    async handleDeleteArticle() {
+      await delArticles(this.slug)
+      this.$router.push('/')
     },
-    handleCreateComment() {
-      if (!this.user.token) {
-        this.$router.push('/register')
-      } else {
-        
+    async handleDeleteComment(id) {
+      try {
+        const { data } = await delComment(this.slug, id)
+        this.comments.forEach((comment, index) => {
+          if (comment.id === id) {
+            this.comments.splice(index, 1)
+          }
+        })
+      } catch (err) {
+
       }
     }
   }
